@@ -2,44 +2,96 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Model implements Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
+
+    public $timestamps = false;
 
     /**
-     * The attributes that are mass assignable.
+     * Atrybuty, które można masowo przypisać.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'email', 'password', 'name', 'last_name', 'phone_number', 'address', 'role',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Atrybuty, które powinny być ukryte w tablicach.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password', 'remember_token',
     ];
 
+    protected $table = 'users';
+    protected $primaryKey = 'id';
+
     /**
-     * The attributes that should be cast.
+     * Pobierz nazwę unikalnego identyfikatora użytkownika.
      *
-     * @var array<string, string>
+     * @return string
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    public function getAuthIdentifierName()
+    {
+        return 'id';
+    }
+
+    /**
+     * Pobierz unikalny identyfikator użytkownika.
+     *
+     * @return mixed
+     */
+    public function getAuthIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Pobierz hasło użytkownika.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Pobierz wartość tokena dla sesji "remember me".
+     *
+     * @return string|null
+     */
+    public function getRememberToken()
+    {
+        return $this->remember_token;
+    }
+
+    /**
+     * Ustaw wartość tokena dla sesji "remember me".
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setRememberToken($value)
+    {
+        $this->remember_token = $value;
+    }
+
+    /**
+     * Pobierz nazwę kolumny dla tokenu "remember me".
+     *
+     * @return string
+     */
+    public function getRememberTokenName()
+    {
+        return 'remember_token';
+    }
 }
