@@ -13,7 +13,6 @@ class EditController extends Controller
     // Wyświetl widok edycji zamówień
     public function index()
     {
-        // Pobierz wszystkie zamówienia, których data jest późniejsza lub równa dzisiejszej dacie
         // Posortuj zamówienia według daty i godziny
         $appointments = Appointment::orderBy('date')
              ->orderBy('hour')
