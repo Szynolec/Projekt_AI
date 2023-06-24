@@ -15,10 +15,9 @@ class EditController extends Controller
     {
         // Pobierz wszystkie zamówienia, których data jest późniejsza lub równa dzisiejszej dacie
         // Posortuj zamówienia według daty i godziny
-        $appointments = Appointment::whereDate('date', '>=', now()->toDateString())
-            ->orderBy('date')
-            ->orderBy('hour')
-            ->get();
+        $appointments = Appointment::orderBy('date')
+             ->orderBy('hour')
+             ->get();
 
         // Pobierz tylko użytkowników o roli "user"
         $users = User::where('role', 'user')->get();

@@ -17,4 +17,5 @@ class Products extends Model
         'des',
         'cost',
     ];
+
 }
