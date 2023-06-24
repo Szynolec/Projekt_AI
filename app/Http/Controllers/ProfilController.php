@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Appointment;
+use App\Models\User;
 
 class ProfilController extends Controller
 {
@@ -35,7 +36,7 @@ class ProfilController extends Controller
 
         // Walidacja danych
         $validatedData = $request->validate([
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email',
             'name' => 'required',
             'last_name' => 'required',
             'phone_number' => 'required|digits:9',
@@ -45,7 +46,6 @@ class ProfilController extends Controller
         ], [
             'email.required' => 'Pole email jest wymagane.',
             'email.email' => 'Podany adres email jest nieprawidłowy.',
-            'email.unique' => 'Podany adres email jest już zarejestrowany.',
             'name.required' => 'Pole imię jest wymagane.',
             'last_name.required' => 'Pole nazwisko jest wymagane.',
             'phone_number.required' => 'Pole numer telefonu jest wymagane.',
@@ -54,6 +54,13 @@ class ProfilController extends Controller
             'current_password.required' => 'W celu zmiany danych to pole musi być wypełnione',
             'new_password.min' => 'Nowe hasło musi mieć minimum :min znaków.'
         ]);
+
+        // Sprawdzenie, czy istnieje już użytkownik o podanym adresie email
+        $existingUser = User::where('email', $validatedData['email'])->where('id', '!=', $user->id)->first();
+
+         if ($existingUser) {
+        return redirect()->back()->withErrors(['email' => 'Użytkownik o podanym adresie email już istnieje.'])->withInput();
+        }
 
         // Aktualizuj dane użytkownika
         $user->email = $validatedData['email'];

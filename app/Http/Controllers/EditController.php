@@ -39,6 +39,15 @@ class EditController extends Controller
             'hour.max' => 'Maksymalna wartość pola godzina to 16.',
         ]);
 
+        // Sprawdzenie czy istnieje już zamówienie o podanej dacie i godzinie
+        $existingAppointment = Appointment::where('date', $request->input('date'))
+        ->where('hour', $request->input('hour'))
+        ->first();
+
+        if ($existingAppointment) {
+            return redirect()->back()->withErrors(['appointment_exists' => 'Zamówienie o podanej dacie i godzinie już istnieje.'])->withInput();
+        }
+
         // Znajdź zamówienie o podanym ID
         $appointment = Appointment::findOrFail($id);
         $appointment->date = $request->input('date');
