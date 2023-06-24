@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Appointment;
 use App\Models\User;
 
@@ -23,6 +24,8 @@ class ProfilController extends Controller
             ->orderBy('date')
             ->orderBy('hour')
             ->get();
+
+
 
         // Przekazanie danych do widoku "profile"
         return view('profile', compact('appointments'));

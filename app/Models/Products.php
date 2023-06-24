@@ -9,6 +9,8 @@ class Products extends Model
 {
     protected $table = 'products'; // Nazwa tabeli w bazie danych
 
+    public $timestamps = false;
+
     protected $fillable = [
         'type',
         'img',
